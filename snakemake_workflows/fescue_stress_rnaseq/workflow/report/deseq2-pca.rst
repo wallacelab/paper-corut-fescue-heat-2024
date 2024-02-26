@@ -1,0 +1,1 @@
+PCA plots of DESeq2 variance stabilized counts of all samples and for each variable separately. The first two principal components are shown in the first plot. The second plot shows the first two principal components combined with principal components 3 and 4.

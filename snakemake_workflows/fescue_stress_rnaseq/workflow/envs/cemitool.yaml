@@ -1,0 +1,10 @@
+name: cemitool
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  - r-base=4.2.3
+  - bioconductor-deseq2=1.38
+  - r-tidyverse=2.0
+  - bioconductor-cemitool=1.22.0

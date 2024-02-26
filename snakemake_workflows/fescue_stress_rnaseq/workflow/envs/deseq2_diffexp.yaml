@@ -1,0 +1,24 @@
+name: deseq2_diffexp
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  - r-base=4.2.3
+  - bioconductor-deseq2=1.38
+  - r-tidyverse=2.0
+  - r-ggpubr=0.6.0
+  - r-pheatmap=1.0.12
+  - r-rcolorbrewer=1.1_3
+  - r-ggsci=3.0.0
+  - r-gridextra=2.3
+  - r-reshape2=1.4.4
+  - bioconductor-clusterprofiler=4.6
+  - bioconductor-enrichplot=1.18
+  - r-ashr=2.2-54
+  - bioconductor-dose=3.24
+  - r-gridextra=2.3
+  - bioconductor-enhancedvolcano=1.16.0
+  - bioconductor-complexheatmap=2.14.0
+  - bioconductor-ihw=1.26.0
+  - r-circlize=0.4.15

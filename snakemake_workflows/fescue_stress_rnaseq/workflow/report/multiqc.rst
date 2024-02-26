@@ -1,0 +1,1 @@
+Quality control was performed with `FastQC <https://www.bioinformatics.babraham.ac.uk/projects/fastqc>`_ and rendered with `MultiQC <https://multiqc.info>`_. 

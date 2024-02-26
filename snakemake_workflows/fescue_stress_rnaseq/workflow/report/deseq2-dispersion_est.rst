@@ -1,0 +1,1 @@
+Per-gene dispersion estimates with the fitted mean-dispersion relationship computed with DESeQ2 and plotted using DESeQ2 plotDispEsts function.

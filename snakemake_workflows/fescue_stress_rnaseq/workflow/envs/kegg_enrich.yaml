@@ -1,0 +1,13 @@
+name: kegg_enrich
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  - bioconductor-deseq2
+  - r-tidyverse
+  - r-ggsci
+  - bioconductor-clusterprofiler
+  - bioconductor-enrichplot
+  - bioconductor-dose
+  - r-r.utils

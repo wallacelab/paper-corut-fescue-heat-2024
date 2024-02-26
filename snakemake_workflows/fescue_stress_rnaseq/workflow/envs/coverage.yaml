@@ -1,0 +1,8 @@
+name: coverage
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - samtools=1.18
+  - bedtools=2.31.0

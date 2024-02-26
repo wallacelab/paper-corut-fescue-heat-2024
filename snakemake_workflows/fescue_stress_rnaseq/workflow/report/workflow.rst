@@ -1,0 +1,3 @@
+This workflow performs RNA-seq analysis on 3' mRNA-Sequencing data (single-end). Quality control analysis was done using `FastQC <https://www.bioinformatics.babraham.ac.uk/projects/fastqc/>`_. After adapter removal with `cutadapt <https://cutadapt.readthedocs.io/en/stable/>` and rRNA removal wit, transcripts were quantified with `Salmon <https://combine-lab.github.io/salmon/>`_. Differential expression analysis was performed using `DESeq2 <https://bioconductor.org/packages/release/bioc/html/DESeq2.html>`_. Functional enrichment analysis was performed using `clusterProfiler <https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html>`_.
+
+For sample metadata, please see {{ snakemake.config["samples"] }}_.

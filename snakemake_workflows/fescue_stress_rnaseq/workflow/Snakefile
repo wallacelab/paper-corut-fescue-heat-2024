@@ -1,0 +1,77 @@
+# =================================================================================================
+
+from snakemake.utils import min_version
+
+# Make Sure Minimun Snakemake version
+min_version("7.18.2")
+
+# =========================================================================================================
+#     Setup Config and Report
+# =========================================================================================================
+
+# Load config file
+configfile: "../config/config.yaml"
+
+# validate(config, schema="../schemas/config.schema.yaml")
+
+# Description of the workflow can be found in the final report
+report: "report/workflow.rst"
+
+container: "docker://continuumio/miniconda3"
+
+# =========================================================================================================
+#     Load Rules
+# =========================================================================================================
+
+include: "rules/common.smk"
+include: "rules/ref.smk"
+include: "rules/qc.smk"
+include: "rules/trim.smk" 
+# include: "rules/kraken.smk"
+include: "rules/ribodetector.smk"
+include: "rules/bowtie2.smk"
+include: "rules/salmon.smk"
+include: "rules/catchSalmon.smk"
+include: "rules/tximport.smk"
+include: "rules/coverage.smk"
+include: "rules/diffexp.smk"
+include: "rules/enrichment.smk"
+include: "rules/cemitool.smk"
+
+
+# =========================================================================================================
+#     The `onstart` Checker
+# =========================================================================================================
+
+onstart:
+    try:
+        print("Checking if all required files are provided...")
+        important_files = [ config["samples"],
+                            config["units"] ]
+        for filename in important_files:
+            if not os.path.exists(filename):
+                raise FileNotFoundError(filename)
+    except FileNotFoundError as e:
+        print("This file is not available or accessible: %s" % e)
+        sys.exit(1)
+    else:
+        print("\tAll required files are present!")
+
+
+# =========================================================================================================
+#     Target Outputs
+# =========================================================================================================
+
+rule all:
+    input:
+        get_target_output,
+
+# =========================================================================================================
+#     Success and Failure Messages
+# =========================================================================================================
+
+onsuccess:
+	print("Success! The Snakemake workflow is completed.")
+
+onerror:
+	print("Error! The Snakemake workflow aborted.")

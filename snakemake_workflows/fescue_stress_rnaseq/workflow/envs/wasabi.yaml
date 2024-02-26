@@ -1,0 +1,8 @@
+name: wasabi
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - r-tidyverse=1.3
+  - r-wasabi=1.0.1

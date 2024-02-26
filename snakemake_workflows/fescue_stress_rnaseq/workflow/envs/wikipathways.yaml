@@ -1,0 +1,13 @@
+name: wikipathways
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  - bioconductor-deseq2
+  - r-tidyverse
+  - r-ggsci
+  - bioconductor-clusterprofiler
+  - bioconductor-enrichplot
+  - bioconductor-dose
+  - bioconductor-org.at.tair.db

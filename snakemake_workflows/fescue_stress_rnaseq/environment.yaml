@@ -1,0 +1,8 @@
+name: fescue_heat_rnaseq
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - snakemake=7.18.2
+  - mamba=1.1.0

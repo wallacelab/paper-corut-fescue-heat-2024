@@ -1,0 +1,1 @@
+Expression heatmaps showing the expressions of top "n" genes with the lowest adjusted p-values. The top "n" genes are shown in the figure. The expression levels are based on variance stabilized counts. The color scale is based on the z-score of the expression levels. Columns are ordered by treatment or condition. ComplexHeatmap package was used to generate the heatmaps.

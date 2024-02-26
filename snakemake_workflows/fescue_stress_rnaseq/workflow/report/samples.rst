@@ -1,0 +1,1 @@
+Sample table that contains all necessary information (metadata) about samples.

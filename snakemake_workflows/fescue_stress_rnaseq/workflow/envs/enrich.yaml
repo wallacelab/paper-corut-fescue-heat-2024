@@ -1,0 +1,16 @@
+name: enrich
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  - r-base=4.2.2
+  - bioconductor-clusterprofiler=4.6.0
+  - r-tidyverse=1.3
+  - bioconductor-topgo=2.50.0
+  - bioconductor-dose=3.24
+  - bioconductor-enrichplot=1.18
+  - r-gridextra=2.3
+  - r-writexl=1.4.2
+  - r-fst=0.9.8
+  - r-ggupset=0.3.0

@@ -1,0 +1,530 @@
+# =================================================================================================
+#     Input Information
+# =================================================================================================
+
+# Sample and Units Sheets 
+samples: ../config/samples.tsv
+units: ../config/units.tsv
+
+# Define the working directory
+workdir:
+  # Path for the results
+  path: /scratch/ac32082/03.FescueHeatStress/01.analysis/fescue_stress_rnaseq
+
+# =================================================================================================
+#     Reference Genome\Transcriptome
+# =================================================================================================
+
+ref:
+  # Plant reference genome, transcriptome, etc.
+  plant:
+    # Reference genome fasta (Tall fescue)
+    genome: /scratch/ac32082/03.FescueHeatStress/00.data/fescue_genome_WALLACE_LAB_ONLY/tall_fescuev0.1.fa
+    # Reference transcriptome fasta (Tall fescue)
+    transcriptome: /scratch/ac32082/03.FescueHeatStress/00.data/fescue_ref_transcriptome/TF_153KSeq.fa
+    # Transcriptome annotations (Tall fescue)
+    annotation: /scratch/ac32082/03.FescueHeatStress/00.data/fescue_ref_transcriptome/TF153KAssembly_wGOTF_DuPontLp4.csv
+    # Transcript hits (TAIR10, PHYTOZOME, etc.)
+    tcp_hits: /scratch/ac32082/03.FescueHeatStress/00.data/fescue_ref_transcriptome/TF153KAssembly_annotations.csv 
+    # 
+    interactions: /scratch/ac32082/03.FescueHeatStress/00.data/tall_fescue.interactions.tair.csv
+  # Chloroplast reference genome, transcriptome, etc. (Tall fescue, KY31)
+  chloroplast:
+    genome: /scratch/ac32082/03.FescueHeatStress/00.data/fescue_chloroplast_genome/KY-31_chloroplast.fasta
+  # Endophyte reference genome (Epichloe festucae)
+  endophyte: 
+    genome: /scratch/ac32082/03.FescueHeatStress/00.data/epichloe_ref_genome/Epichloe_festucae_Fl1.fa
+  
+# =================================================================================================
+#     Workflow Settings
+# =================================================================================================
+
+settings:
+
+  trimming: 
+    # Set to true in order to perform adapter trimming on raw reads
+    activate: true
+
+  rrna_removal:
+    # Set true in order to remove rRNA reads
+    activate: true
+  
+  kraken:
+  # Set to true in order to use custom kraken database
+    use_custom_db: true 
+  
+  salmon:
+  # Set to true in order to build decoy-aware Salmon index
+    salmon_sa_index: false 
+
+  plot_bootstraps:
+    # Set to true in order to generate bootstrap plots
+    activate: true
+
+  tximport:
+    # Set to true in order to perform tximport
+    activate: true
+
+# ================================================================================================= 
+#     Tool Parameters
+# ================================================================================================= 
+
+params:
+
+  # ----------------------------------------------------------------------
+  #     FastQC Params
+  # ----------------------------------------------------------------------
+
+  fastqc:
+    # Additional parameters for fastqc
+    extra: ""
+    # Number of threads for fastqc
+    threads: 6
+
+  # ----------------------------------------------------------------------
+  #     MultiQC Params
+  # ----------------------------------------------------------------------
+
+  multiqc: ""
+
+  # ----------------------------------------------------------------------
+  #     trim_galore Params
+  # ----------------------------------------------------------------------
+
+  trim_galore:
+    # Number of threads for trim_galore
+    threads: 8
+
+  # ----------------------------------------------------------------------
+  #     Cutadapt Params
+  # ----------------------------------------------------------------------
+
+  cutadapt:
+    # Number of threads for cutadapt
+    threads: 8
+
+  # ----------------------------------------------------------------------
+  #     Cutadapt Params
+  # ----------------------------------------------------------------------
+
+  seqkit:
+    # Number of threads for cutadapt
+    threads: 8
+
+  # ----------------------------------------------------------------------
+  #     Kraken2 Params
+  # ----------------------------------------------------------------------
+
+  kraken2:
+    # Number of threads for kraken2
+    threads: 6
+    # Additional parameters for kraken2
+    extra: "--memory-mapping"
+    # Custom database name
+    db_name: pluspfp
+    # Custom database path
+    db_path: /scratch/ac32082/03.FescueHeatStress/00.data/kraken_db/kraken_pluspfp_bd
+  
+  # ----------------------------------------------------------------------
+  #     ribodetector Params
+  # ----------------------------------------------------------------------
+
+  ribodetector:
+    # Number of threads for bbmap
+    threads: 8
+    mem: 30
+    # len: 88 
+    # Additional parameters for bbmap
+    extra:
+  
+  # ----------------------------------------------------------------------
+  #     Salmon Params
+  # ----------------------------------------------------------------------
+  
+  # For building Salmon index
+  salmon_index: 
+    # Number of threads for Salmon
+    threads: 96
+    # Additional parameters for Salmon index
+    index_extra: "-k 15"
+
+  # For quantification
+  salmon: 
+    # Number of threads for Salmon
+    threads: 8
+    # Number of bootstrap samples
+    num_bootstrap: 100
+    # Library type
+    lib_type: "A"
+    # Estimated average fragment length
+    fld_mean: 150
+    # Estimated standard deviation of fragment length
+    fld_sd: 30
+    # Additional parameters for Salmon
+    quant_extra: "--validateMappings --softclip --noLengthCorrection --minScoreFraction 0.5"
+    # --minScoreFraction 0.3 
+
+  # ----------------------------------------------------------------------
+  #     tximport Params
+  # ----------------------------------------------------------------------  
+  tximport:
+    # Number of threads for tximport
+    threads: 64
+
+  # ----------------------------------------------------------------------
+  #     DESeq2 Params
+  # ----------------------------------------------------------------------
+
+  deseq2:
+    # Number of threads for deseq2
+    threads: 16
+    # Samples to exclude (e.g. outliers due to technical problems)
+    exclude: ["H10_NC315N2W1-plate4", "H10_HS315N1D3-plate3", "H09_HS303N1D3-plate3", 
+              "H08_HS320N1W1-plate4", "H07_NC316N1D1-plate3", "H06_NC315N1D1-plate3",
+              "H06_HS315N1W1-plate4", "C05_HS303P1HR12-plate2", "B02_HS315P2HR0-plate1", 
+              "A10_HS303N4HR2-plate1", "A03_HS316P1HR0-plate1", "B02_NC303N3D3-plate4",
+              "F01_HS303N2HR0-plate1", "H09_NC303N2W1-plate4", "A02_HS315P1HR0-plate1",
+              "A01_HS303P1HR0-plate1", "A01_NC320N3HR12-plate3", "A10_NC303N3HR12-plate2", 
+              "B10_HS303N3D3-plate3", "B10_NC303N4HR12-plate2", "C10_HS303N4D3-plate3",
+              "C11_HS316P2HR2-plate1", "C11_NC316P1HR12-plate2", "D01_HS303P4HR0-plate1",
+              "D11_HS316P3HR2-plate1", "F02_NC315P3D3-plate4", "F10_NC315P4W1-plate4",
+              "G09_NC303N1W1-plate4", "H08_NC320N1D1-plate3", "A10_HS303N2D3-plate3"]
+    # Variables of interest
+    variables_of_interest:
+      condition:
+        # any fold change will be relative to this factor level
+        base_level: NC
+      treatment:
+        # any fold change will be relative to this factor level
+        base_level: uninfected
+      genotype:
+        # any fold change will be relative to this factor level
+        base_level: "303"
+      time_point:
+        # any fold change will be relative to this factor level
+        base_level: HR0
+      plate:
+        base_level: "1"
+    model: ~1
+    
+    # Filtering parameters
+    filter:
+      # filter lowly expressed genes
+      minimal_filtering: 
+        activate: false
+        min_counts: 1
+      # filter out genes where there are less than x samples with counts greater than or equal to y
+      additional_filtering: 
+        activate: true
+        min_samples: 4 # smallestGroupSize is recommended
+        min_counts_per_sample: 5 # Usually 5 & 10 are recommended
+
+    # Subset parameters
+    subset:
+      activate: false
+      filter: {'condition':HS}
+
+    # Grouping parameters
+    grouping:
+      activate: true
+      # Grouping variables
+      vars: ["genotype", "condition", "treatment", "time_point"]
+      model: ~ group
+
+    # PCA parameters
+    pca:
+      shape: "time_point"
+
+    # Differential expression parameters
+    padj_threshold: 0.05 # FDR cutoff for differential expression
+    lfc_threshold: 0.58 # Log2 fold change cutoff for differential expression
+
+    # Analyses to perform
+    analyses:
+      ######## E+ vs. E- (Heat) ########
+      - name: "heat_inf_vs_uninf_303"
+        subset:
+          condition: "HS"
+          genotype: "303"
+        exclude_time_points: ["D3"]
+        formula: "~ treatment + time_point + treatment:time_point"
+        reduced_formula: "~ treatment + time_point"
+        filter:
+          enable: false
+          min_counts: 5
+          min_samples: 4
+        exploratory_plots:
+          color_by: time_point
+          shape_by: treatment
+        coef_of_interest: "treatmentinfected"
+      - name: "heat_inf_vs_uninf_315"
+        subset:
+          condition: "HS"
+          genotype: "315"
+        formula: "~ treatment + time_point + treatment:time_point"
+        reduced_formula: "~ treatment + time_point"
+        filter:
+          enable: false
+          min_counts: 5
+          min_samples: 4
+        exploratory_plots:
+          color_by: time_point
+          shape_by: treatment
+        coef_of_interest: "treatmentinfected"
+      - name: "heat_inf_vs_uninf_316"
+        subset:
+          condition: "HS"
+          genotype: "316"
+        formula: "~ treatment + time_point + treatment:time_point"
+        reduced_formula: "~ treatment + time_point"
+        filter:
+          enable: false
+          min_counts: 5
+          min_samples: 4
+        exploratory_plots:
+          color_by: time_point
+          shape_by: treatment
+        coef_of_interest: "treatmentinfected"
+      - name: "heat_inf_vs_uninf_320"
+        subset:
+          condition: "HS"
+          genotype: "320"
+        formula: "~ treatment + time_point + treatment:time_point"
+        reduced_formula: "~ treatment + time_point"
+        filter:
+          enable: false
+          min_counts: 5
+          min_samples: 4
+        exploratory_plots:
+          color_by: time_point
+          shape_by: treatment
+        coef_of_interest: "treatmentinfected"
+
+      ######## E+ vs. E- (Normal) ########
+      - name: "normal_inf_vs_uninf_303"
+        subset:
+          condition: "NC"
+          genotype: "303"
+        formula: "~ treatment + time_point + treatment:time_point"
+        reduced_formula: "~ treatment + time_point"
+        filter:
+          enable: false
+          min_counts: 5
+          min_samples: 4
+        exploratory_plots:
+          color_by: time_point
+          shape_by: treatment
+        coef_of_interest: "treatmentinfected"
+      - name: "normal_inf_vs_uninf_315"
+        subset:
+          condition: "NC"
+          genotype: "315"
+        formula: "~ treatment + time_point + treatment:time_point"
+        reduced_formula: "~ treatment + time_point"
+        filter:
+          enable: false
+          min_counts: 5
+          min_samples: 4
+        exploratory_plots:
+          color_by: time_point
+          shape_by: treatment
+        coef_of_interest: "treatmentinfected"
+      - name: "normal_inf_vs_uninf_316"
+        subset:
+          condition: "NC"
+          genotype: "316"
+        formula: "~ treatment + time_point + treatment:time_point"
+        reduced_formula: "~ treatment + time_point"
+        filter:
+          enable: false
+          min_counts: 5
+          min_samples: 4
+        exploratory_plots:
+          color_by: time_point
+          shape_by: treatment
+        coef_of_interest: "treatmentinfected"
+      - name: "normal_inf_vs_uninf_320"
+        subset:
+          condition: "NC"
+          genotype: "320"
+        formula: "~ treatment + time_point + treatment:time_point"
+        reduced_formula: "~ treatment + time_point"
+        filter:
+          enable: false
+          min_counts: 5
+          min_samples: 4
+        exploratory_plots:
+          color_by: time_point
+          shape_by: treatment
+        coef_of_interest: "treatmentinfected"
+
+      ######## Heat vs. Normal (E+) ########
+      - name: "infected_heat_vs_normal_303"
+        subset:
+          treatment: "infected"
+          genotype: "303"
+        formula: "~ condition + time_point + condition:time_point"
+        reduced_formula: "~ condition + time_point"
+        filter:
+          enable: false
+          min_counts: 5
+          min_samples: 4
+        exploratory_plots:
+          color_by: time_point
+          shape_by: condition
+        coef_of_interest: "conditionHS"
+      - name: "infected_heat_vs_normal_315"
+        subset:
+          treatment: "infected"
+          genotype: "315"
+        formula: "~ condition + time_point + condition:time_point"
+        reduced_formula: "~ condition + time_point"
+        filter:
+          enable: false
+          min_counts: 5
+          min_samples: 4
+        exploratory_plots:
+          color_by: time_point
+          shape_by: condition
+        coef_of_interest: "conditionHS"
+      - name: "infected_heat_vs_normal_316"
+        subset:
+          treatment: "infected"
+          genotype: "316"
+        formula: "~ condition + time_point + condition:time_point"
+        reduced_formula: "~ condition + time_point"
+        filter:
+          enable: false
+          min_counts: 5
+          min_samples: 4
+        exploratory_plots:
+          color_by: time_point
+          shape_by: condition
+        coef_of_interest: "conditionHS"
+      - name: "infected_heat_vs_normal_320"
+        subset:
+          treatment: "infected"
+          genotype: "320"
+        formula: "~ condition + time_point + condition:time_point"
+        reduced_formula: "~ condition + time_point"
+        filter:
+          enable: false
+          min_counts: 5
+          min_samples: 4
+        exploratory_plots:
+          color_by: time_point
+          shape_by: condition
+        coef_of_interest: "conditionHS"
+      
+      ######## Heat vs. Normal (E-) ########
+      - name: "uninfected_heat_vs_normal_303"
+        subset:
+          treatment: "uninfected"
+          genotype: "303"
+        exclude_time_points: ["D3"]
+        formula: "~ condition + time_point + condition:time_point"
+        reduced_formula: "~ condition + time_point"
+        filter:
+          enable: false
+          min_counts: 5
+          min_samples: 4
+        exploratory_plots:
+          shape_by: condition
+          color_by: time_point
+        coef_of_interest: "conditionHS"
+      - name: "uninfected_heat_vs_normal_315"
+        subset:
+          treatment: "uninfected"
+          genotype: "315"
+        formula: "~ condition + time_point + condition:time_point"
+        reduced_formula: "~ condition + time_point"
+        filter:
+          enable: false
+          min_counts: 5
+          min_samples: 4
+        exploratory_plots:
+          shape_by: condition
+          color_by: time_point
+        coef_of_interest: "conditionHS"
+      - name: "uninfected_heat_vs_normal_316"
+        subset:
+          treatment: "uninfected"
+          genotype: "316"
+        formula: "~ condition + time_point + condition:time_point"
+        reduced_formula: "~ condition + time_point"
+        filter:
+          enable: false
+          min_counts: 5
+          min_samples: 4
+        exploratory_plots:
+          shape_by: condition
+          color_by: time_point
+        coef_of_interest: "conditionHS"
+      - name: "uninfected_heat_vs_normal_320"
+        subset:
+          treatment: "uninfected"
+          genotype: "320"
+        formula: "~ condition + time_point + condition:time_point"
+        reduced_formula: "~ condition + time_point"
+        filter:
+          enable: false
+          min_counts: 5
+          min_samples: 4
+        exploratory_plots:
+          shape_by: condition
+          color_by: time_point
+        coef_of_interest: "conditionHS"
+  
+  # ----------------------------------------------------------------------
+  #     clusterProfiler Params
+  # ----------------------------------------------------------------------
+
+  clusterProfiler:
+    # number of threads to use
+    threads: 8
+    # adjusted pvalue cutoff on enrichment tests to report
+    p_cutoff: 0.05 
+    # qvalue cutoff on enrichment tests to report as significant
+    q_cutoff: 0.1 
+    # one of "holm", "hochberg", "hommel", "bonferroni", 
+    # "BH", "BY", "fdr", "none"
+    p_adj_method: BH
+    # minimum number of genes in a category to test
+    minGSSize: 3
+    # maximum number of genes in a category to test
+    maxGSSize: 5000
+    # Number of categories to plot
+    n_category: 20
+    # KEGG organism code
+    kegg_organism: 'ath' 
+
+  # ----------------------------------------------------------------------
+  #     EnhancedVolcano Params
+  # ----------------------------------------------------------------------
+
+  EnhancedVolcano:
+    # number of threads to use
+    threads: 6
+    # adjusted pvalue cutoff
+    p_cutoff: 0.05
+    # Log2 fold-change cutoff
+    f_cutoff: 1
+
+  # ----------------------------------------------------------------------
+  #     CEMiTool Params
+  # ----------------------------------------------------------------------
+
+  CEMiTool:
+    # number of threads to use
+    threads: 16
+    # params for CEMiTool::cemitool
+    verbose: true
+    plot: true
+    apply_vst: true
+    filter: true
+    count_filter:
+      activate: true
+      min_counts: 5
+      min_samples: 4
+    network_type: "signed"
+    cor_method: "spearman"

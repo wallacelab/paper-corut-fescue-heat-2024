@@ -1,0 +1,18 @@
+name: deseq2
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  - r-base=4.2.3
+  - bioconductor-deseq2=1.38
+  - r-tidyverse=2.0
+  - bioconductor-tximport=1.26
+  - r-ggpubr=0.6.0
+  - r-pheatmap
+  - r-poiclaclu=1.0.2.1
+  - r-ashr=2.2_54
+  - r-rcolorbrewer=1.1_3
+  - bioconductor-enhancedvolcano
+  - r-ggsci=3.0.0
+  - bioconductor-ruvseq

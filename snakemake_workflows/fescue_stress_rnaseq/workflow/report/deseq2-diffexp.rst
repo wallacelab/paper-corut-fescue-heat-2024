@@ -1,0 +1,1 @@
+Differential expression (DE) analysis results. DE analysis was performed using `DESeq2 <https://bioconductor.org/packages/release/bioc/html/DESeq2.html>`_. FDR cutoff was set to {{ snakemake.config["params"]["deseq2"]["padj_threshold"] }}_, and log2 fold change cutoff was set to {{ snakemake.config["params"]["deseq2"]["lfc_threshold"] }}_.
